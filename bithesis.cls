@@ -308,7 +308,7 @@
   {
     北京理工大学本科生毕业设计（论文）,
     北京理工大学本科生毕业设计（论文）外文翻译,
-    Beijing~Institute~of~Technology~Bachelor's~Thesis,
+    Beijing~Institute~of~Technology~Course~Report,
     北京理工大学硕士学位论文,
     北京理工大学博士学位论文,
   }
@@ -316,7 +316,7 @@
   {
     本科生毕业设计（论文）,
     本科生毕业设计（论文）外文翻译,
-    Beijing\nobreak{~}Institute\nobreak{~}of\nobreak{~}Technology~Bachelor's~Thesis,
+    Beijing\nobreak{~}Institute\nobreak{~}of\nobreak{~}Technology~Course~Report,
   }
 \tl_const:Nn \c__bithesis_auto_tl { BIThesis-auto-magic }
 \keys_define:nn { bithesis }
