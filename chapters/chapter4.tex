@@ -1,49 +1,50 @@
-%%
-% BIThesis 本科毕业设计论文模板（全英文） —— 使用 XeLaTeX 编译 The BIThesis Template for Undergraduate Thesis
-% This file has no copyright assigned and is placed in the Public Domain.
-%%
+\chapter{The RSA Algorithm and Proof of Correctness}
 
-\chapter{Engineering Design}
+Building upon the properties of the multiplicative group of integers modulo $n$
+($\mathbb{Z}_n^*$) and
+Euler's theorem established in the previous chapter,
+we can now construct the RSA algorithm.
+This process relies on the difficulty of reversing operations within this algebraic structure
+without specific ``trapdoor'' information.
 
-Although engineering drawing still plays an important role in product design and manufacturing in many industrial sectors around the world, manual sketching for creating drawings has been gradually replaced by CAD (computer-aided design) software using computers. Beginning in the 1980s, CAD software reduced the need for draftsmen significantly, especially in small to mid-sized companies. The software's affordability and ability to run on personal computers in the mid-1990s allowed engineers to do their own drafting and analytic work to some extent \ref{eq:1}.
+\section{Key Generation Process}
 
-\begin{equation}
-x^n + y^n = z^n
-\label{eq:1}
-\end{equation}
+The security of RSA begins with the careful construction of a finite cyclic group and the selection of exponents.
+The process generates a public key (distributed openly) and a private key (kept secret).
 
-\section{注意事项}
+\begin{enumerate}
+	\item \textbf{Select Primes}
 
-为保证封面、参考文献等支持中文，模板尽管是英文，仍使用了 \texttt{ctex} 及 \texttt{xeCJK} 宏包。
-请注意以下事项。
+	      Choose two large prime numbers, $p$ and $q$.
 
-\subsection{输入标点符号}
+	\item \textbf{Compute Modulus}
 
-% 此节删改自 lshort-zh-cn（GFDL v1.3）。
-% https://github.com/CTeX-org/lshort-zh-cn/blob/e95288a697822a6f63e6f2eb1b9160a6f324c566/src/chap/chap.02.text.tex#L160-L178
+	      Calculate $n=p\cdot q$,
+	      which will be the modulus for both the public and private keys.
+	      The size of $n$ in bits determines the security level of the RSA algorithm.
 
-\LaTeX{} 中，西文的单引号 ` 和\ ' 分别用 \verb|`| 和 \verb|'| 输入；双引号 `` 和\ '' 分别用 \verb|``| 和 \verb|''| 输入。
-若用其它方式，引号具体形状和宽度可能错误。
-（而中文的标点符号使用中文输入法输入即可，一般不需要过多留意。）
+	\item \textbf{Compute Totient}
 
-\begin{lstlisting}
-``No, sir!'' All the pedant in Dean Hart was aroused.
-``In the English language, the word `majority' means `more than half'.
-Thirteen out of fourteen is a majority, nothing more.''
+	      Calculate Euler's totient function
+	      $$
+		      \varphi(n)=\varphi(p\cdot q)=\varphi(p)\cdot \varphi(q)=(p-1)(q-1).
+	      $$
+	      This value represents the order of the group $\mathbb{Z}_n^*$.
 
-“他不回答，对柜里说，‘温两碗酒，要一碟茴香豆。’便排出九文大钱。”
-\end{lstlisting}
+	\item \textbf{Choose Public Exponent}
 
-``No, sir!'' All the pedant in Dean Hart was aroused. ``In the English language, the word `majority' means `more than half'. Thirteen out of fourteen is a majority, nothing more.''
+	      Select an integer $e\in(1,\varphi(n))$ such that $e\perp\varphi(n)$,
+	      i.e. $\gcd(e,\varphi(n))=1$.
+	      This ensures that $e$ has a multiplicative inverse modulo $\varphi(n)$.
 
-“他不回答，对柜里说，‘温两碗酒，要一碟茴香豆。’便排出九文大钱。”
+	\item \textbf{Compute Private Exponent}
 
-% 如有特殊需要，可参考 https://github.com/CTeX-org/ctex-kit/issues/389 定制。
+	      Apply the Extended Euclidean Algorithm to determine $d$ as the modular multiplicative inverse of $e$ modulo $\varphi(n)$.
+	      $$
+		      d\equiv e^{-1}\pmod{\varphi(n)}.
+	      $$
+\end{enumerate}
 
-
-\section{常见问题和疑难解答}
-
-如果您遇到\href{https://bithesis.bitnp.net/faq/char-missing.html}{生僻字无法显示}、
-\href{https://bithesis.bitnp.net/faq/enumitem-nosep.html}{列表项间距过大}、
-\href{https://bithesis.bitnp.net/faq/longtable.html}{三线表需要跨页}等问题，
-请参考\textcolor{magenta}{\href{https://bithesis.bitnp.net/faq/}{在线文档的「疑难杂症」部分}}。
+As a result of the process described above,
+the public key is $(e,n)$,
+while the private key is $d$.
