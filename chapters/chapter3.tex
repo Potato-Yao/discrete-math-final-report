@@ -1,49 +1,95 @@
-%%
-% BIThesis 本科毕业设计论文模板（全英文） —— 使用 XeLaTeX 编译 The BIThesis Template for Undergraduate Thesis
-% This file has no copyright assigned and is placed in the Public Domain.
-%%
+\chapter{The Core Theorems}
 
-\chapter{Engineering Design}
+We need to prove that RSA can do encryption and decryption correctly, so some math theorems are required.
 
-Although engineering drawing still plays an important role in product design and manufacturing in many industrial sectors around the world, manual sketching for creating drawings has been gradually replaced by CAD (computer-aided design) software using computers. Beginning in the 1980s, CAD software reduced the need for draftsmen significantly, especially in small to mid-sized companies. The software's affordability and ability to run on personal computers in the mid-1990s allowed engineers to do their own drafting and analytic work to some extent \ref{eq:1}.
+\section{Fermat's Little Theorem}
 
-\begin{equation}
-x^n + y^n = z^n
-\label{eq:1}
-\end{equation}
+\begin{them}[Fermat's Little Theorem]
+    If $p$ is a prime and $a$ is an integer coprime with it, then
+    \begin{equation*}
+        a^{p - 1} \equiv 1 \pmod{p}
+    \end{equation*}
+\end{them}
 
-\section{注意事项}
+This theorem shows that there exists a number where exponentiation returns the value to the identity.
 
-为保证封面、参考文献等支持中文，模板尽管是英文，仍使用了 \texttt{ctex} 及 \texttt{xeCJK} 宏包。
-请注意以下事项。
+However, because the number we handle in RSA is formed like $n = pq$, a more general theorem is needed.
 
-\subsection{输入标点符号}
+\section{Euler's Theorem}
 
-% 此节删改自 lshort-zh-cn（GFDL v1.3）。
-% https://github.com/CTeX-org/lshort-zh-cn/blob/e95288a697822a6f63e6f2eb1b9160a6f324c566/src/chap/chap.02.text.tex#L160-L178
+\begin{them}[Euler's Theorem]
+    For any integer $a$ and positive integer $n$ coprime with it,
+    $a^{\varphi(n)} \equiv 1 \pmod{n}$, where $\varphi(n)$ is Euler's Totient Function, defined at \ref{def:0}.
+\end{them}
 
-\LaTeX{} 中，西文的单引号 ` 和\ ' 分别用 \verb|`| 和 \verb|'| 输入；双引号 `` 和\ '' 分别用 \verb|``| 和 \verb|''| 输入。
-若用其它方式，引号具体形状和宽度可能错误。
-（而中文的标点符号使用中文输入法输入即可，一般不需要过多留意。）
+\begin{proof}
+    Let $R = \{r_1, r_2, \ldots, r_{\varphi(n)}\}$ be the set of positive integers less than $n$ and coprime to $n$.
+    Consider the set $S = \{ar_1, ar_2, \ldots, ar_{\varphi(n)}\}$.
 
-\begin{lstlisting}
-``No, sir!'' All the pedant in Dean Hart was aroused.
-``In the English language, the word `majority' means `more than half'.
-Thirteen out of fourteen is a majority, nothing more.''
+    Since $\gcd(a, n) = 1$, for any $r_i \in R$, we have $\gcd(ar_i, n) = 1$.
+    Also, if $ar_i \equiv ar_j \pmod{n}$, then since $a$ is invertible modulo $n$, we have $r_i \equiv r_j \pmod{n}$, which implies $i = j$.
+    So, the elements of $S$ are distinct modulo $n$ and are a permutation of $R$ modulo $n$.
 
-“他不回答，对柜里说，‘温两碗酒，要一碟茴香豆。’便排出九文大钱。”
-\end{lstlisting}
+    Therefore, the product of elements in $S$ is congruent to the product of elements in $R$ modulo $n$:
+    \begin{equation*}
+        \prod_{i=1}^{\varphi(n)} (ar_i) \equiv \prod_{i=1}^{\varphi(n)} r_i \pmod{n}
+    \end{equation*}
+    \begin{equation*}
+        a^{\varphi(n)} \prod_{i=1}^{\varphi(n)} r_i \equiv \prod_{i=1}^{\varphi(n)} r_i \pmod{n}
+    \end{equation*}
 
-``No, sir!'' All the pedant in Dean Hart was aroused. ``In the English language, the word `majority' means `more than half'. Thirteen out of fourteen is a majority, nothing more.''
+    Let $P = \prod_{i=1}^{\varphi(n)} r_i$. Since each $r_i$ is coprime to $n$, $P$ is also coprime to $n$, so $\gcd(P, n) = 1$ and $P$ is invertible modulo $n$.
+    Multiplying both sides by $P^{-1}$, we have:
+    \begin{equation*}
+        a^{\varphi(n)} \equiv 1 \pmod{n}
+    \end{equation*}
+\end{proof}
 
-“他不回答，对柜里说，‘温两碗酒，要一碟茴香豆。’便排出九文大钱。”
+\section{Theoretical Application to the RSA Identity}
 
-% 如有特殊需要，可参考 https://github.com/CTeX-org/ctex-kit/issues/389 定制。
+The correctness of RSA relies on the fact that decryption reverses encryption. Specifically, given a public key $(e, n)$ and private key $(d, n)$, for any message $m$, we must prove that:
+\begin{equation*}
+    (m^e)^d \equiv m \pmod{n}
+\end{equation*}
 
+This is equivalent to proving $m^{ed} \equiv m \pmod{n}$, knowing that $ed \equiv 1 \pmod{\varphi(n)}$.
 
-\section{常见问题和疑难解答}
+\begin{proof}
+    Since $ed \equiv 1 \pmod{\varphi(n)}$, there exists an integer $k$ such that $ed = 1 + k\varphi(n)$.
+    We verify the congruence $m^{ed} \equiv m \pmod{n}$ in two cases, depending on if $m$ and $n$ are coprime.
 
-如果您遇到\href{https://bithesis.bitnp.net/faq/char-missing.html}{生僻字无法显示}、
-\href{https://bithesis.bitnp.net/faq/enumitem-nosep.html}{列表项间距过大}、
-\href{https://bithesis.bitnp.net/faq/longtable.html}{三线表需要跨页}等问题，
-请参考\textcolor{magenta}{\href{https://bithesis.bitnp.net/faq/}{在线文档的「疑难杂症」部分}}。
+    \textbf{Case 1: $\gcd(m, n) = 1$}
+
+    In this case, we can directly apply Euler's Theorem ($m^{\varphi(n)} \equiv 1 \pmod{n}$):
+    \begin{align*}
+        m^{ed} &= m^{1 + k\varphi(n)} \\
+               &= m \cdot (m^{\varphi(n)})^k \\
+               &\equiv m \cdot (1)^k \pmod{n} \\
+               &\equiv m \pmod{n}
+    \end{align*}
+
+    \textbf{Case 2: $\gcd(m, n) \neq 1$}
+
+    Since $n = pq$ is a product of two distinct primes, if $\gcd(m, n) \neq 1$, then $m$ must be a multiple of $p$ or $q$.
+
+    Without loss of generality, assume $m$ is a multiple of $p$, i.e., $m \equiv 0 \pmod{p}$. Then trivially:
+    \begin{equation*}
+        m^{ed} \equiv 0 \equiv m \pmod{p}
+    \end{equation*}
+
+    If $m$ is also a multiple of $q$, then $m$ is a multiple of $pq=n$, so $m^{ed} \equiv 0 \equiv m \pmod{n}$.
+
+    If $m$ is not a multiple of $q$, then $\gcd(m, q) = 1$. By Fermat's Little Theorem ($m^{q-1} \equiv 1 \pmod{q}$):
+    \begin{align*}
+        m^{ed} &= m^{1 + k\varphi(n)} \\
+               &= m^{1 + k(p-1)(q-1)} \\
+               &= m \cdot (m^{q-1})^{k(p-1)} \\
+               &\equiv m \cdot (1)^{k(p-1)} \pmod{q} \\
+               &\equiv m \pmod{q}
+    \end{align*}
+
+    Since $m^{ed} \equiv m \pmod{p}$ and $m^{ed} \equiv m \pmod{q}$, and $\gcd(p, q) = 1$, by the Chinese Remainder Theorem properties, we conclude:
+    \begin{equation*}
+        m^{ed} \equiv m \pmod{pq}
+    \end{equation*}
+\end{proof}

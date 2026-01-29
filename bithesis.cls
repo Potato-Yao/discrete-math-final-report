@@ -151,7 +151,7 @@
 }
 \clist_map_inline:nn
   {
-    {code} {代码},
+    {code} {Code},
     {udc} {UDC分类号：},
     {classification} {中图分类号：},
     {classified_level} {密级},

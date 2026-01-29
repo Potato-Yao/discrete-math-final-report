@@ -1,6 +1,6 @@
 \chapter{Mathematical Foundation}
 
-To build the RSA algorithm and verify its correctness, several fundamental mathematical tools are needed.
+To build the RSA algorithm and verify its correctness, some basic mathematical tools are needed.
 
 \section{Modular Arithmetic and the Multiplicative Group}
 
@@ -8,11 +8,19 @@ To build the RSA algorithm and verify its correctness, several fundamental mathe
   If $a$ and $b$ are integers and $m$ is a positive integer, then $a$ is \textbf{congruent} to $b$ modulo $m$ if $m$ divides the difference $a - b$. We use the notation $a \equiv b \pmod{m}$ to indicate it.
 \end{defn}
 
-By the definition of congruence, we have the theorem\ref{them:0}.
+From the definition of congruence, we have Theorem \ref{them:0}.
 
 \begin{them}\label{them:0}
   $a \equiv b \pmod{m} \iff \exists k \in \mathbb{Z} \text{ such that } a = b + km$.
 \end{them}
+
+\begin{proof}
+  This proof is straightforward from the definition.
+  
+  $(\Rightarrow)$ If $a \equiv b \pmod{m}$, then $m$ divides the difference $a - b$. So we have an integer $k$ such that $a - b = km$, which implies $a = b + km$.
+
+  $(\Leftarrow)$ If $a = b + km$, then $a - b = km$, which means $m$ divides $a - b$. So $a \equiv b \pmod{m}$.
+\end{proof}
 
 Let $\mathbb{Z}_m$ be the set of all possible remainders modulo $m$, as the set $\{n \in \mathbb{Z} \mid 0 \le n < m\}$. We can define the addition and multiplication on this set, as
 
@@ -36,9 +44,21 @@ This group provides a closed, reversible structure, which is essential for makin
   Let $a$ and $b$ be non-zero integers. The largest integer $d$ such that $d \mid a$ and $d \mid b$ is called the \textbf{greatest common divisor} of $a$ and $b$, denoted by $\gcd(a, b)$.
 \end{defn}
 
-\begin{them}[Bézout’s Identity]\label{them:1}
+\begin{them}[Bézout's Identity]\label{them:1}
   Let $d = \gcd(a, b)$. Then $\exists x, y$ such that $ax + by = d$.
 \end{them}
+
+\begin{proof}
+  Consider the set $S = \{ax + by \mid x, y \in \mathbb{Z}, ax + by > 0\}$. By the Well-Ordering Principle of integers, there must be a smallest positive element in $S$. Let us name it $d'$.
+  
+  We first show $d'$ divides $a$. If not, we can write $a = qd' + r$ with $0 < r < d'$. Since $d'$ is in $S$, $d' = ax_0 + by_0$. Then the remainder $r = a - q(ax_0 + by_0) = a(1 - qx_0) + b(-qy_0)$. So $r$ is also a linear combination of $a$ and $b$, and is positive and smaller than $d'$. This contradicts the fact that $d'$ is the smallest. So $d'$ must divide $a$. Similarly, $d'$ divides $b$.
+  
+  Since $d'$ is a common divisor, and $d$ is the greatest common divisor, we have $d' \le d$.
+  
+  On the other hand, since $d \mid a$ and $d \mid b$, and $d' = ax_0 + by_0$, we know $d$ divides $d'$, so $d \le d'$.
+  
+  Therefore $d = d'$, so $d$ can be written as $ax + by$.
+\end{proof}
 
 By using the Extended Euclidean Algorithm, we can not only find the greatest common divisor of two integers $a$ and $b$, but also determine the $x$ and $y$ by theorem\ref{them:1}. 
 
@@ -62,7 +82,7 @@ Return $(old\_r, old\_s, old\_t)$
 
 \section{Euler's Totient Function}
 
-\begin{defn}[Euler's Totient Function]
+\begin{defn}[Euler's Totient Function]\label{def:0}
   Euler's Totient Function $\varphi(n)$ counts the number of integers less than $n$ that are coprime to $n$.
 \end{defn}
 
@@ -74,3 +94,49 @@ A useful expression for calculating this function based on the prime factorizati
   \end{equation*}
   where $n = p_1^{k_1}p_2^{k_2}\cdots p_r^{k_r}$.
 \end{them}
+
+\begin{proof}
+  Since Euler's Totient Function is multiplicative, which means if $\gcd(n, m) = 1$, then $\varphi(nm) = \varphi(n)\varphi(m)$, we can calculate $\varphi(n)$ by calculating each prime power factor.
+
+  Consider $n = p^k$ where $p$ is a prime. The integers between $1$ and $p^k$ that are not coprime to $p^k$ must be multiples of $p$.
+  These multiples are $1\cdot p, 2\cdot p, \ldots, p^{k-1}\cdot p$. There are exactly $p^{k-1}$ such numbers.
+  
+  So the count of numbers that are coprime to $p^k$ is the total numbers minus these multiples:
+  \begin{equation*}
+    \varphi(p^k) = p^k - p^{k-1} = p^{k-1}(p - 1)
+  \end{equation*}
+
+  Now for $n = p_1^{k_1}p_2^{k_2}\cdots p_r^{k_r}$, since different prime powers are coprime to each other, we have:
+  \begin{align*}
+    \varphi(n) &= \varphi(p_1^{k_1})\varphi(p_2^{k_2})\cdots\varphi(p_r^{k_r}) \\
+               &= \prod_{i=1}^r p_i^{k_i - 1}(p_i - 1)
+  \end{align*}
+\end{proof}
+
+From theorem\ref{them:2}, we have two useful corollary as followed,
+
+\begin{cor}
+  $\varphi(n) = n - 1$, if n is a prime.
+\end{cor}
+
+\begin{proof}
+  If $n$ is a prime, the only factors of $n$ are $1$ and $n$. The integers less than $n$ are $1, 2, ..., n-1$. None of them divides $n$.
+  So, all $n-1$ integers are coprime to $n$. Therefore, $\varphi(n) = n - 1$.
+\end{proof}
+
+\begin{cor}
+  $\varphi(n) = (p - 1)(q - 1)$, if $n = pq$ and $p, q$ are primes.
+\end{cor}
+
+\begin{proof}
+  Since $p$ and $q$ are distinct primes, $\gcd(p, q) = 1$.
+  By the multiplicative property of Euler's function:
+  \begin{equation*}
+    \varphi(pq) = \varphi(p)\varphi(q)
+  \end{equation*}
+  From the standard property of prime numbers, $\varphi(p) = p-1$ and $\varphi(q) = q-1$.
+  Substituting these values, we get:
+  \begin{equation*}
+    \varphi(n) = (p - 1)(q - 1)
+  \end{equation*}
+\end{proof}
