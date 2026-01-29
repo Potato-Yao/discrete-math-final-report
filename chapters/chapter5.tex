@@ -1,49 +1,102 @@
-%%
-% BIThesis 本科毕业设计论文模板（全英文） —— 使用 XeLaTeX 编译 The BIThesis Template for Undergraduate Thesis
-% This file has no copyright assigned and is placed in the Public Domain.
-%%
+\chapter{The Complexity and Security Analysis of RSA Algorithm}
 
-\chapter{Engineering Design}
-
-Although engineering drawing still plays an important role in product design and manufacturing in many industrial sectors around the world, manual sketching for creating drawings has been gradually replaced by CAD (computer-aided design) software using computers. Beginning in the 1980s, CAD software reduced the need for draftsmen significantly, especially in small to mid-sized companies. The software's affordability and ability to run on personal computers in the mid-1990s allowed engineers to do their own drafting and analytic work to some extent \ref{eq:1}.
-
-\begin{equation}
-x^n + y^n = z^n
-\label{eq:1}
-\end{equation}
-
-\section{注意事项}
-
-为保证封面、参考文献等支持中文，模板尽管是英文，仍使用了 \texttt{ctex} 及 \texttt{xeCJK} 宏包。
-请注意以下事项。
-
-\subsection{输入标点符号}
-
-% 此节删改自 lshort-zh-cn（GFDL v1.3）。
-% https://github.com/CTeX-org/lshort-zh-cn/blob/e95288a697822a6f63e6f2eb1b9160a6f324c566/src/chap/chap.02.text.tex#L160-L178
-
-\LaTeX{} 中，西文的单引号 ` 和\ ' 分别用 \verb|`| 和 \verb|'| 输入；双引号 `` 和\ '' 分别用 \verb|``| 和 \verb|''| 输入。
-若用其它方式，引号具体形状和宽度可能错误。
-（而中文的标点符号使用中文输入法输入即可，一般不需要过多留意。）
-
-\begin{lstlisting}
-``No, sir!'' All the pedant in Dean Hart was aroused.
-``In the English language, the word `majority' means `more than half'.
-Thirteen out of fourteen is a majority, nothing more.''
-
-“他不回答，对柜里说，‘温两碗酒，要一碟茴香豆。’便排出九文大钱。”
-\end{lstlisting}
-
-``No, sir!'' All the pedant in Dean Hart was aroused. ``In the English language, the word `majority' means `more than half'. Thirteen out of fourteen is a majority, nothing more.''
-
-“他不回答，对柜里说，‘温两碗酒，要一碟茴香豆。’便排出九文大钱。”
-
-% 如有特殊需要，可参考 https://github.com/CTeX-org/ctex-kit/issues/389 定制。
+The trapdoor function of RSA algorithm is the modular exponentiation operation.
+It is a one-way function that is easy to compute but hard to invert, 
+and this ensures the security of RSA algorithm.
 
 
-\section{常见问题和疑难解答}
+\section{Time Complexity Analysis}
 
-如果您遇到\href{https://bithesis.bitnp.net/faq/char-missing.html}{生僻字无法显示}、
-\href{https://bithesis.bitnp.net/faq/enumitem-nosep.html}{列表项间距过大}、
-\href{https://bithesis.bitnp.net/faq/longtable.html}{三线表需要跨页}等问题，
-请参考\textcolor{magenta}{\href{https://bithesis.bitnp.net/faq/}{在线文档的「疑难杂症」部分}}。
+\subsection{Select Primes}
+
+  If we randomly select $p$ and $q$, and check if they are prime,
+  according to prime density theorem, the expected selection rounds is $O(\ln n)$.
+  So, when using Miller-Rabin test to check if $p$ and $q$ are prime,
+  the time complexity of this step is $O(k (\ln n)^4)$, 
+  where $k$ is the test rounds for a single number in Miller-Rabin test.
+  
+  Optimizations using FFT can reduce the time complexity of Miller-Rabin test to \\ $O(k(\ln n)^2 \ln \ln n \ln \ln \ln n)$,
+  but it's usually not the first choice in practice.
+
+\subsection{Compute Modulus and Totient}
+
+  The time complexity of computing product of two integers is $O((\ln n)^2)$.
+  So, the time complexity of computing $n$ and $\varphi(n)$ is $O((\ln n)^2)$.
+
+\subsection{Choose Public Exponent}
+
+  We can arbitrarily select a prime number $e$ while ensuring $e \perp \varphi(n)$.
+  If we use Euclidean Algorithm to calculate $\gcd(e, \varphi(n))$,
+  the time complexity of this step is $O((\ln n)^2)$.
+
+\subsection{Compute Private Exponent}
+
+  The time complexity of computing $d$ is also $O((\ln n)^2)$ using Extended Euclidean Algorithm.
+
+\subsection{Summary}
+
+  To sum up, the time complexity of RSA encryption is $O((\ln n)^4)$
+   (ignoring coefficient $k$ in Miller-Rabin test), 
+  which is of polynomial time.
+  However, we'll discuss that the time complexity of classical deciphering attacks is of exponential time,
+  which is much slower than encryption process.
+
+\section{Security Analysis}
+
+Deciphering process of RSA algorithm is polynomial-time equivalent to large integer factorization problem
+and high power residue problem in classical computing theory, 
+which are both speculated to be NP-intermediate.
+In the following sections, we will discuss some deciphering methods 
+that are used to break RSA algorithm.
+
+
+\subsection{Try All Possible Values of $d$}
+
+  In this method, attackers try all possible values of $d$ until 
+  they find the correct one. The worst case time complexity of this attack is $O(n)$, 
+  which is definitely infeasible for large $n$.
+
+\subsection{Brute Forcing to Factor $n$ to Find $p$ and $q$}
+	      
+  Enumerate all integers $p$ in $[2, \sqrt n]$, and check if $n$ is divisible by $p$.
+  The time complexity of this attack is $O(\sqrt n)$.
+
+\subsection{Factoring $n$ by Pollard's Rho plus ECM Algorithm}
+	      
+  Pollard's Rho Algorithm is based on Birthday Paradox, 
+  and can factorize an integer $n$ with an expected 
+  time complexity of $O(\sqrt p)$, where $p$ is the smallest prime factor of $n$.
+  This algorithm is widely used to decipher RSA ciphertext 
+  when $p$ and $q$ are both less than $128$ bits in decimal.
+
+  ECM (Elliptic Curve Method) was proposed by Hendrik Lenstra in 1985.
+  This algorithm extends Pollard's $p - 1$ Algorithm to elliptic curve groups, 
+  optimizing the efficiency based on the group order changes caused by parameter variations.
+  The time complexity of ECM Algorithm is $L_p[\dfrac{1}{2}, \sqrt 2]$, where
+  $$
+  L_x[a, b] = e^{b (\ln x)^a (\ln \ln x)^{1 - a}}.
+  $$
+
+  The combination of these two algorithms is a fatal threat for weak key RSA cryptosystem.
+
+
+\subsection{GNFS (General Number Field Sieve)}
+
+  GNFS Algorithm is based on the bifield mapping 
+  between the algebraic number field and the rational number field.
+  The time complexity of GNFS is $L_n [\dfrac{1}{3}, \left( \dfrac{64}{9} \right)^{\frac{1}{3}}]$.
+  From the definition of subexponential function, we can assume that GNFS performs
+  better than ECM for very large scale $n$ (which is usually more than 150 bits in decimal).
+
+  However, the engineering implementation of GNFS is very difficult, and is strongly dependent
+  on distributive computing environment.
+
+\subsection{Summary}
+
+  Even if we use the most efficient algorithm mentioned above,
+  deciphering RSA ciphertext with a key more than 2048 bits in decimal is still
+  computationally infeasible.
+  Though quantum algorithms like Shor's Algorithm can deal with strong key cases in polynomial time,
+  the implementation of them are not yet available.
+
+  Thus, we can assume that RSA algorithm is secure against classical attacks.
