@@ -48,3 +48,95 @@ The process generates a public key (distributed openly) and a private key (kept 
 As a result of the process described above,
 the public key is $(e,n)$,
 while the private key is $d$.
+
+\section{Encryption and Decryption Functions}
+
+\subsection{Encryption}
+
+Assume the message $m$ is an integer in the range $[0,n)$.
+The sender uses the recipient's public key $(e,n)$ to compute the ciphertext $c$ as follows:
+$$
+	c\equiv m^e\pmod{n}.
+$$
+
+\subsection{Decryption}
+The recipient uses their private key $d$ to recover the original message $m$ from the ciphertext $c$:
+$$
+	m\equiv c^d\pmod{n}.
+$$
+
+\section{Proof of Correctness}
+For the RSA cryptosystem to be valid,
+we must prove that the encryption-decryption process actually recovers any original message $m$.
+Mathematically, given the public key $(e,n)$ and private key $d$ generated
+we must prove that
+$$
+	\forall m\in\mathbb{N}\cap[0,n)\ ((m^e)^d\equiv m\pmod{n}).
+$$
+
+By definition,
+$d$ is the modular multiplicative inverse of $e$ modulo $\varphi(n)$,
+i.e.
+$$
+	d\cdot e\equiv 1\pmod{\varphi(n)}.
+$$
+This implies that there exists some integer $i$ such that
+$$
+	d\cdot e=i\cdot\varphi(n)+1=i(p-1)(q-1)+1.
+$$
+Rewrite the left-hand side of the equation to be proved:
+$$
+	(m^e)^d=m^{e\cdot d}=m^{i(p-1)(q-1)+1}=m^{i(p-1)(q-1)}\cdot m.
+$$
+
+Firstly, let's prove $(m^e)^d\equiv m\pmod{p}$.
+Examine two possible cases for the relation between $p$ and $m$:
+\begin{enumerate}
+	\item $p\nmid m$.
+
+	      By Fermat's Little Theorem,
+	      since $p$ is prime and $p\nmid m$,
+	      $$
+		      m^{p-1}\equiv 1\pmod{p}.
+	      $$
+	      Therefore,
+	      $$
+		      m^{i(p-1)(q-1)}\cdot m=(m^{p-1})^{i(q-1)}\cdot m\equiv 1^{i(q-1)}\cdot m\equiv m\pmod{p},
+	      $$
+	      i.e. $(m^e)^d\equiv m\pmod{p}$.
+
+	\item $p\mid m$.
+
+	      In this case,
+	      $m\equiv 0\pmod{p}$.
+	      Thus,
+	      $$
+		      m^{i(p-1)(q-1)}\cdot m\equiv 0^{i(p-1)(q-1)}\cdot 0\equiv 0\pmod{p},
+	      $$
+	      so the congruence $(m^e)^d\equiv m\pmod{p}$ also holds.
+\end{enumerate}
+In both cases,
+$(m^e)^d\equiv m\pmod{p}$.
+
+Due to the symmetry between $p$ and $q$,
+the exact same logic applie to $q$.
+Thus,
+$(m^e)^d\equiv m\pmod{q}$ can be established similarly.
+
+The derivation above establishes two congruences:
+$$
+	\begin{cases}
+		m^{d\cdot e}\equiv m\pmod{p}\iff m^{d\cdot e}-m\equiv 0\pmod{p}\implies p\mid (m^{d\cdot e}-m) \\
+		m^{d\cdot e}\equiv m\pmod{q}\iff m^{d\cdot e}-m\equiv 0\pmod{q}\implies q\mid (m^{d\cdot e}-m)
+	\end{cases}.
+$$
+Since $p$ and $q$ are distinct primes,
+they are coprime, i.e. $\gcd(p,q)=1$.
+By applying the property of divisibility,
+$$
+	n=p\cdot q\mid(m^{d\cdot e}-m),
+$$
+which is equivalent to
+$$
+	(m^e)^d\equiv m\pmod{n}.
+$$
