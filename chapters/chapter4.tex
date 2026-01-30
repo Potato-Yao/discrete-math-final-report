@@ -12,69 +12,62 @@ without specific ``trapdoor'' information.
 The security of RSA begins with the careful construction of a finite cyclic group and the selection of exponents.
 The process generates a public key (distributed openly) and a private key (kept secret).
 
-\begin{algo}[RSA Key Generation]\label{algo:rsa_keygen}
-	\mbox{}
-	\begin{enumerate}
-		\item \textbf{Select Primes}
+\begin{enumerate}
+	\item \textbf{Select Primes}
 
-		      Choose two large prime numbers, $p$ and $q$.
+	      Choose two large prime numbers, $p$ and $q$.
 
-		\item \textbf{Compute Modulus}
+	\item \textbf{Compute Modulus}
 
-		      Calculate $n=p\cdot q$,
-		      which will be the modulus for both the public and private keys.
-		      The size of $n$ in bits determines the security level of the RSA algorithm.
+	      Calculate $n=p\cdot q$,
+	      which will be the modulus for both the public and private keys.
+	      The size of $n$ in bits determines the security level of the RSA algorithm.
 
-		\item \textbf{Compute Totient}
+	\item \textbf{Compute Totient}
 
-		      Calculate Euler's totient function
-		      \begin{equation}
-			      \varphi(n)=\varphi(p\cdot q)=\varphi(p)\cdot \varphi(q)=(p-1)(q-1).
-		      \end{equation}
-		      This value represents the order of the group $\mathbb{Z}_n^*$.
+	      Calculate Euler's totient function
+	      \begin{equation}
+		      \varphi(n)=\varphi(p\cdot q)=\varphi(p)\cdot \varphi(q)=(p-1)(q-1).
+	      \end{equation}
+	      This value represents the order of the group $\mathbb{Z}_n^*$.
 
-		\item \textbf{Choose Public Exponent}
+	\item \textbf{Choose Public Exponent}
 
-		      Select an integer $e\in(1,\varphi(n))$ such that $e\perp\varphi(n)$,
-		      i.e. $\gcd(e,\varphi(n))=1$.
-		      This ensures that $e$ has a multiplicative inverse modulo $\varphi(n)$.
+	      Select an integer $e\in(1,\varphi(n))$ such that $e\perp\varphi(n)$,
+	      i.e. $\gcd(e,\varphi(n))=1$.
+	      This ensures that $e$ has a multiplicative inverse modulo $\varphi(n)$.
 
-		\item \textbf{Compute Private Exponent}
+	\item \textbf{Compute Private Exponent}
 
-		      Apply the Extended Euclidean Algorithm to determine $d$ as the modular multiplicative inverse of $e$ modulo $\varphi(n)$.
-		      \begin{equation}
-			      d\equiv e^{-1}\pmod{\varphi(n)}.
-		      \end{equation}
-	\end{enumerate}
-\end{algo}
+	      Apply the Extended Euclidean Algorithm to determine $d$ as the modular multiplicative inverse of $e$ modulo $\varphi(n)$.
+	      \begin{equation}
+		      d\equiv e^{-1}\pmod{\varphi(n)}.
+	      \end{equation}
+\end{enumerate}
 
 As a result of the process described above,
 the public key is $(e,n)$,
 while the private key is $d$.
 
-\section{Encryption and Decryption Functions}
+\section{Encryption and Decryption}
 
-\begin{defn}[Encryption]
-	Assume the message $m$ is an integer in the range $[0,n)$.
-	The sender uses the recipient's public key $(e,n)$ to compute the ciphertext $c$ as follows:
-	\begin{equation}
-		c\equiv m^e\pmod{n}.
-	\end{equation}
-\end{defn}
+Assume the message $m$ is an integer in the range $[0,n)$.
+The sender uses the recipient's public key $(e,n)$ to compute the ciphertext $c$ as follows:
+\begin{equation}
+	c\equiv m^e\pmod{n}.
+\end{equation}
 
-\begin{defn}[Decryption]
-	The recipient uses their private key $d$ to recover the original message $m$ from the ciphertext $c$:
-	\begin{equation}
-		m\equiv c^d\pmod{n}.
-	\end{equation}
-\end{defn}
+The recipient uses their private key $d$ to recover the original message $m$ from the ciphertext $c$:
+\begin{equation}
+	m\equiv c^d\pmod{n}.
+\end{equation}
 
 \section{Proof of Correctness}
 For the RSA cryptosystem to be valid,
 we must prove that the encryption-decryption process actually recovers any original message $m$.
 
 \begin{them}[RSA Correctness]
-	Given the public key $(e,n)$ and private key $d$ generated,
+	Given the public key $(e,n)$ and private key $d$ generated as described,
 	we must prove that
 	\begin{equation}
 		\forall m\in\mathbb{N}\cap[0,n)\ ((m^e)^d\equiv m\pmod{n}).
