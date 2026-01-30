@@ -13,39 +13,39 @@ The security of RSA begins with the careful construction of a finite cyclic grou
 The process generates a public key (distributed openly) and a private key (kept secret).
 
 \begin{algo}[RSA Key Generation]\label{algo:rsa_keygen}
-    \mbox{}
-\begin{enumerate}
-	\item \textbf{Select Primes}
+	\mbox{}
+	\begin{enumerate}
+		\item \textbf{Select Primes}
 
-	      Choose two large prime numbers, $p$ and $q$.
+		      Choose two large prime numbers, $p$ and $q$.
 
-	\item \textbf{Compute Modulus}
+		\item \textbf{Compute Modulus}
 
-	      Calculate $n=p\cdot q$,
-	      which will be the modulus for both the public and private keys.
-	      The size of $n$ in bits determines the security level of the RSA algorithm.
+		      Calculate $n=p\cdot q$,
+		      which will be the modulus for both the public and private keys.
+		      The size of $n$ in bits determines the security level of the RSA algorithm.
 
-	\item \textbf{Compute Totient}
+		\item \textbf{Compute Totient}
 
-	      Calculate Euler's totient function
-	      \begin{equation}
-		      \varphi(n)=\varphi(p\cdot q)=\varphi(p)\cdot \varphi(q)=(p-1)(q-1).
-	      \end{equation}
-	      This value represents the order of the group $\mathbb{Z}_n^*$.
+		      Calculate Euler's totient function
+		      \begin{equation}
+			      \varphi(n)=\varphi(p\cdot q)=\varphi(p)\cdot \varphi(q)=(p-1)(q-1).
+		      \end{equation}
+		      This value represents the order of the group $\mathbb{Z}_n^*$.
 
-	\item \textbf{Choose Public Exponent}
+		\item \textbf{Choose Public Exponent}
 
-	      Select an integer $e\in(1,\varphi(n))$ such that $e\perp\varphi(n)$,
-	      i.e. $\gcd(e,\varphi(n))=1$.
-	      This ensures that $e$ has a multiplicative inverse modulo $\varphi(n)$.
+		      Select an integer $e\in(1,\varphi(n))$ such that $e\perp\varphi(n)$,
+		      i.e. $\gcd(e,\varphi(n))=1$.
+		      This ensures that $e$ has a multiplicative inverse modulo $\varphi(n)$.
 
-	\item \textbf{Compute Private Exponent}
+		\item \textbf{Compute Private Exponent}
 
-	      Apply the Extended Euclidean Algorithm to determine $d$ as the modular multiplicative inverse of $e$ modulo $\varphi(n)$.
-	      \begin{equation}
-		      d\equiv e^{-1}\pmod{\varphi(n)}.
-	      \end{equation}
-\end{enumerate}
+		      Apply the Extended Euclidean Algorithm to determine $d$ as the modular multiplicative inverse of $e$ modulo $\varphi(n)$.
+		      \begin{equation}
+			      d\equiv e^{-1}\pmod{\varphi(n)}.
+		      \end{equation}
+	\end{enumerate}
 \end{algo}
 
 As a result of the process described above,
@@ -55,18 +55,18 @@ while the private key is $d$.
 \section{Encryption and Decryption Functions}
 
 \begin{defn}[Encryption]
-Assume the message $m$ is an integer in the range $[0,n)$.
-The sender uses the recipient's public key $(e,n)$ to compute the ciphertext $c$ as follows:
-\begin{equation}
-	c\equiv m^e\pmod{n}.
-\end{equation}
+	Assume the message $m$ is an integer in the range $[0,n)$.
+	The sender uses the recipient's public key $(e,n)$ to compute the ciphertext $c$ as follows:
+	\begin{equation}
+		c\equiv m^e\pmod{n}.
+	\end{equation}
 \end{defn}
 
 \begin{defn}[Decryption]
-The recipient uses their private key $d$ to recover the original message $m$ from the ciphertext $c$:
-\begin{equation}
-	m\equiv c^d\pmod{n}.
-\end{equation}
+	The recipient uses their private key $d$ to recover the original message $m$ from the ciphertext $c$:
+	\begin{equation}
+		m\equiv c^d\pmod{n}.
+	\end{equation}
 \end{defn}
 
 \section{Proof of Correctness}
@@ -82,71 +82,70 @@ we must prove that the encryption-decryption process actually recovers any origi
 \end{them}
 
 \begin{proof}
-By definition,
-$d$ is the modular multiplicative inverse of $e$ modulo $\varphi(n)$,
-i.e.
-\begin{equation}
-	d\cdot e\equiv 1\pmod{\varphi(n)}.
-\end{equation}
-This implies that there exists some integer $i$ such that
-\begin{equation}
-	d\cdot e=i\cdot\varphi(n)+1=i(p-1)(q-1)+1.
-\end{equation}
-Rewrite the left-hand side of the equation to be proved:
-\begin{equation}
-	(m^e)^d=m^{e\cdot d}=m^{i(p-1)(q-1)+1}=m^{i(p-1)(q-1)}\cdot m.
-\end{equation}
+	By definition,
+	$d$ is the modular multiplicative inverse of $e$ modulo $\varphi(n)$,
+	i.e.
+	\begin{equation}
+		d\cdot e\equiv 1\pmod{\varphi(n)}.
+	\end{equation}
+	This implies that there exists some integer $i$ such that
+	\begin{equation}
+		d\cdot e=i\cdot\varphi(n)+1=i(p-1)(q-1)+1.
+	\end{equation}
+	Rewrite the left-hand side of the equation to be proved:
+	\begin{equation}
+		(m^e)^d=m^{e\cdot d}=m^{i(p-1)(q-1)+1}=m^{i(p-1)(q-1)}\cdot m.
+	\end{equation}
 
-Firstly, let's prove $(m^e)^d\equiv m\pmod{p}$.
-Examine two possible cases for the relation between $p$ and $m$:
+	Firstly, let's prove $(m^e)^d\equiv m\pmod{p}$.
+	Examine two possible cases for the relation between $p$ and $m$:
 
-\begin{case}[$p\nmid m$]
-	      By Fermat's Little Theorem,
-	      since $p$ is prime and $p\nmid m$,
-	      \begin{equation}
-		      m^{p-1}\equiv 1\pmod{p}.
-	      \end{equation}
-	      Therefore,
-	      \begin{equation}
-		      m^{i(p-1)(q-1)}\cdot m=(m^{p-1})^{i(q-1)}\cdot m\equiv 1^{i(q-1)}\cdot m\equiv m\pmod{p},
-	      \end{equation}
-	      i.e. $(m^e)^d\equiv m\pmod{p}$.
-\end{case}
+	\begin{case}[$p\nmid m$]
+		By Fermat's Little Theorem,
+		since $p$ is prime and $p\nmid m$,
+		\begin{equation}
+			m^{p-1}\equiv 1\pmod{p}.
+		\end{equation}
+		Therefore,
+		\begin{equation}
+			m^{d\cdot e}=m^{i(p-1)(q-1)}\cdot m=(m^{p-1})^{i(q-1)}\cdot m\equiv 1^{i(q-1)}\cdot m\equiv m\pmod{p}.
+		\end{equation}
+	\end{case}
 
-\begin{case}[$p\mid m$]
-	      In this case,
-	      $m\equiv 0\pmod{p}$.
-	      Thus,
-	      \begin{equation}
-		      m^{i(p-1)(q-1)}\cdot m\equiv 0^{i(p-1)(q-1)}\cdot 0\equiv 0\pmod{p},
-	      \end{equation}
-	      so the congruence $(m^e)^d\equiv m\pmod{p}$ also holds.
-\end{case}
+	\begin{case}[$p\mid m$]
+		In this case,
+		$m\equiv 0\pmod{p}$.
+		Thus the congruence
+		\begin{equation}
+			m^{d\cdot e}=m^{i(p-1)(q-1)}\cdot m\equiv 0^{i(p-1)(q-1)}\cdot 0\equiv 0\pmod{p}
+		\end{equation}
+		also holds.
+	\end{case}
 
-In both cases,
-$(m^e)^d\equiv m\pmod{p}$.
+	In both cases,
+	$m^{d\cdot e}\equiv m\pmod{p}$.
 
-Due to the symmetry between $p$ and $q$,
-the exact same logic applies to $q$.
-Thus,
-$(m^e)^d\equiv m\pmod{q}$ can be established similarly.
+	Due to the symmetry between $p$ and $q$,
+	the exact same logic applies to $q$.
+	Thus,
+	$m^{d\cdot e}\equiv m\pmod{q}$ can be established similarly.
 
-The derivation above establishes two congruences:
-\begin{equation}
-	\begin{cases}
-		m^{d\cdot e}\equiv m\pmod{p}\iff m^{d\cdot e}-m\equiv 0\pmod{p}\implies p\mid (m^{d\cdot e}-m) \\
-		m^{d\cdot e}\equiv m\pmod{q}\iff m^{d\cdot e}-m\equiv 0\pmod{q}\implies q\mid (m^{d\cdot e}-m)
-	\end{cases}.
-\end{equation}
+	The derivation above establishes two congruences:
+	\begin{equation}
+		\begin{cases}
+			m^{d\cdot e}\equiv m\pmod{p}\iff m^{d\cdot e}-m\equiv 0\pmod{p}\iff p\mid (m^{d\cdot e}-m) \\
+			m^{d\cdot e}\equiv m\pmod{q}\iff m^{d\cdot e}-m\equiv 0\pmod{q}\iff q\mid (m^{d\cdot e}-m)
+		\end{cases}.
+	\end{equation}
 
-Since $p$ and $q$ are distinct primes,
-they are coprime, i.e. $\gcd(p,q)=1$.
-By applying the property of divisibility,
-\begin{equation}
-	n=p\cdot q\mid(m^{d\cdot e}-m),
-\end{equation}
-which is equivalent to
-\begin{equation}
-	(m^e)^d\equiv m\pmod{n}.
-\end{equation}
+	Since $p$ and $q$ are distinct primes,
+	they are coprime, i.e. $\gcd(p,q)=1$.
+	By applying the property of divisibility,
+	\begin{equation}
+		n=p\cdot q\mid(m^{d\cdot e}-m),
+	\end{equation}
+	which is equivalent to
+	\begin{equation}
+		(m^e)^d\equiv m\pmod{n}.
+	\end{equation}
 \end{proof}
