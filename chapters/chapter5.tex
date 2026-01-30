@@ -29,6 +29,31 @@ and this ensures the security of RSA algorithm.
   If we use Euclidean Algorithm to calculate $\gcd(e, \varphi(n))$,
   the time complexity of this step is $O((\ln n)^2)$.
 
+  \begin{proof}
+    First, $e$ and $\varphi(n)$ both have $O(\ln n)$ bits. 
+    The Euclidean Algorithm process requires $k = O(\ln n)$ steps,
+    so the time complexity seems to be $O((\ln n)^3)$, since each step 
+    requires $O((\ln n)^2)$ time to calculate the remainder.
+    
+    Let $(a_{i - 1}, a_i)$ be the numbers in the $i$-th step of Euclidean Algorithm ($a_{i - 1} \ge a_i$), 
+    $l_i$ be the length of bits of $a_i$ in decimal.
+    Here, we have $a_0 = \max(e, \varphi(n)), a_1 = \min(e, \varphi(n))$.
+
+    Let $q_i = \lfloor \dfrac{a_{i - 1}}{a_{i}} \rfloor$, 
+    the length of $q_i$ in decimal is at most $l_{i - 1} - l_i + 1$. 
+    So, the process to calculate the remainder in each step is $O(l_i(l_{i - 1} - l_i + 1))$.
+
+    We have $l_{i - 1} \ge l_i$, so $l_i(l_{i - 1} - l_i + 1) \le l_{i - 1}(l_{i - 1} - l_i + 1)$.
+    Ignoring the coefficient, then we have
+    $$
+      \begin{aligned}
+        \sum_{i = 1}^{k} l_{i}(l_{i - 1} - l_i) \le \sum_{i = 1}^{k} l_{i - 1}(l_{i - 1} - l_i) 
+        \le \int_{0}^{l_0} x \text{d} x = \dfrac{l_0^2}{2} = O((\ln n)^2)
+      \end{aligned}
+    $$
+    Therefore, the time complexity of calculating $\gcd(e, \varphi(n))$ is $O((\ln n)^2)$ instead of $O((\ln n)^3)$.
+  \end{proof}
+
 \subsection{Compute Private Exponent}
 
   The time complexity of computing $d$ is also $O((\ln n)^2)$ using Extended Euclidean Algorithm.
@@ -56,12 +81,12 @@ that are used to break RSA algorithm.
   they find the correct one. The worst case time complexity of this attack is $O(n)$, 
   which is definitely infeasible for large $n$.
 
-\subsection{Brute Forcing to Factor $n$ to Find $p$ and $q$}
+\subsection{Brute Force to Factor $n$}
 	      
   Enumerate all integers $p$ in $[2, \sqrt n]$, and check if $n$ is divisible by $p$.
   The time complexity of this attack is $O(\sqrt n)$.
 
-\subsection{Factoring $n$ by Pollard's Rho plus ECM Algorithm}
+\subsection{Factor $n$ by Pollard's Rho plus ECM Algorithm}
 	      
   Pollard's Rho Algorithm is based on Birthday Paradox, 
   and can factorize an integer $n$ with an expected 
