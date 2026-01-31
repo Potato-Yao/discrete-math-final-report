@@ -8,7 +8,7 @@ To build the RSA algorithm and verify its correctness, some basic mathematical t
   If $a$ and $b$ are integers and $m$ is a positive integer, then $a$ is \textbf{congruent} to $b$ modulo $m$ if $m$ divides the difference $a - b$. We use the notation $a \equiv b \pmod{m}$ to indicate it.
 \end{defn}
 
-From the definition of congruence, we have Theorem \ref{them:0}.
+From the definition of congruence\cite{rosen2019}, we have Theorem \ref{them:0}.
 
 \begin{them}\label{them:0}
   $a \equiv b \pmod{m} \iff \exists k \in \mathbb{Z} \text{ such that } a = b + km$.
@@ -36,7 +36,7 @@ These operations form the arithmetic modulo $m$. What's more, by considering the
 \end{defn}
 
 
-This group provides a closed, reversible structure, which is essential for making RSA working correctly.
+This group provides a closed, reversible structure, which is essential for making RSA working correctly\cite{artin2010}.
 
 \section{Greatest Common Divisor and the Extended Euclidean Algorithm}
 
@@ -60,7 +60,7 @@ This group provides a closed, reversible structure, which is essential for makin
   Therefore $d = d'$, so $d$ can be written as $ax + by$.
 \end{proof}
 
-By using the Extended Euclidean Algorithm, we can not only find the greatest common divisor of two integers $a$ and $b$, but also determine the $x$ and $y$ by theorem\ref{them:1}. 
+By using the Extended Euclidean Algorithm\cite{rosen2019}, we can not only find the greatest common divisor of two integers $a$ and $b$, but also determine the $x$ and $y$ by theorem\ref{them:1}. 
 
 \begin{lstlisting}[caption={The Extended Euclidean Algorithm}, label={alg:eea_general}]
 Algorithm: EEA(a, b)
@@ -86,7 +86,7 @@ Return $(old\_r, old\_s, old\_t)$
   Euler's Totient Function $\varphi(n)$ counts the number of integers less than $n$ that are coprime to $n$.
 \end{defn}
 
-A useful expression for calculating this function based on the prime factorization of $n$ is given by Theorem \ref{them:2}.
+A useful expression for calculating this function based on the prime factorization of $n$ is given by Theorem \ref{them:2}\cite{graham1994}.
 
 \begin{them}\label{them:2}
   \begin{equation*}
