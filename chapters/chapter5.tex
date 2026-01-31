@@ -86,7 +86,7 @@ The time complexity of this attack is $O(\sqrt n)$.
 
 \subsection{Factor $n$ by Pollard's Rho plus ECM Algorithm}
 
-Pollard's Rho Algorithm is based on Birthday Paradox,
+Pollard's Rho Algorithm\cite{lenstra1987} is based on Birthday Paradox,
 and can factorize an integer $n$ with an expected
 time complexity of $O(\sqrt p)$, where $p$ is the smallest prime factor of $n$.
 This algorithm is widely used to decipher RSA ciphertext
@@ -105,7 +105,7 @@ The combination of these two algorithms is a fatal threat for weak key RSA crypt
 
 \subsection{GNFS (General Number Field Sieve)}
 
-GNFS Algorithm is based on the bifield mapping
+GNFS Algorithm\cite{nfs1993} is based on the bifield mapping
 between the algebraic number field and the rational number field.
 The time complexity of GNFS is $L_n \left[\dfrac{1}{3}, \left( \dfrac{64}{9} \right)^{\frac{1}{3}}\right]$.
 From the definition of subexponential function, we can assume that GNFS performs

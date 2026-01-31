@@ -6,22 +6,40 @@
 % 摘要若要按经管学院的要求，先英文再中文，请调换以下 abstract、abstractEn 的顺序。
 
 \begin{abstract}
-  摘要正文选用模板中的样式所定义的“正文”，每段落首行缩进 2 个字符；或者手动设置成每段落首行缩进 2 个汉字，字体：宋体，字号：小四，行距：固定值 22 磅，间距：段前、段后均为 0 行。阅后删除此段。
+  RSA 算法是密码学中一个重要且基础的算法，在各领域有相当广泛的应用。
+  本文旨在通过离散数学课程知识进行理论推导，给出 RSA 算法的流程，证明其正确性，并研究其复杂度及安全性。
 
-  摘要是一篇具有独立性和完整性的短文，应概括而扼要地反映出本论文的主要内容。包括研究目的、研究方法、研究结果和结论等，特别要突出研究结果和结论。中文摘要力求语言精炼准确，本科生毕业设计（论文）摘要建议 300-500 字。摘要中不可出现参考文献、图、表、化学结构式、非公知公用的符号和术语。英文摘要与中文摘要的内容应一致。阅后删除此段。
+  本文首先进行了裴蜀定理的证明，以此给出当正整数 $x$ 在模 $n$ 剩余系下存在乘法逆元时，
+  以 $O((\ln n)^2)$ 时间复杂度求解其逆元值的扩展欧几里得算法。
+  然后研究了模意义剩余系的性质以证明欧拉定理，进而给出了 RSA 算法的流程并证明了正确性。
+  最后，本文分析出 RSA 算法的加密过程为多项式复杂度，而现有的破解算法均为指数级复杂度，从而说明了算法的安全性。
+
+  本文得出结论：
+  RSA 算法基于数论中的欧拉定理，通过素性测试、求解乘法逆元等算法，构建了一套密码体系。
+  该算法通过一个单向陷门函数，使得加密和解密过程均可在多项式时间内完成，
+  但破解过程暂无多项式复杂度算法，这说明了其在现有工程实现下的安全性。
 \end{abstract}
 
 % 如需手动控制换行连字符位置，可写 aa\-bb，详见
 % https://bithesis.bitnp.net/faq/hyphen.html
 
 \begin{abstractEn}
-  Conventional  product  development  employs  a  design-build-test  philosophy.
-  The sequentially  executed  development  process  often  results  in  prolonged
-  lead  times  and elevated product costs. The proposed e-Design paradigm employs
-  IT-enabled technology for product design, including virtual prototyping (VP) to
-  support a cross-functional team in analyzing  product  performance,  reliability,
-  and  manufacturing costs  early  in  product development, and in making quantitative
-  trade-offs for design decision making. Physical prototypes  of  the  product  design
-  are  then  produced  using  the  rapid  prototyping  (RP) technique  and  computer
-  numerical  control  (CNC)  to  support  design  verification  and functional prototyping, respectively.
+  RSA Algorithm is an important and fundamental algorithm in cryptography, which is widely used in various fields.
+  In this paper, we derive the RSA Algorithm process based on the knowledge of discrete mathematics, 
+  prove the correctness of the algorithm, and analyze its time complexity and security.
+
+  We first prove the correctness of Bézout's Theorem to 
+  derive the extended Euclidean algorithm for solving the multiplicative inverse of a certain integer $x$ modulo $n$.
+  Then, we prove the correctness of Euler's theorem through 
+  the properties of the modular arithmetic and the multiplicative groups, 
+  and construct the RSA Algorithm process based on the knowledge of Euler's theorem.
+  Finally, we analyze the time complexity of the RSA Algorithm and prove its security.
+
+  We reach the conclusions:
+  RSA Algorithm is theoretically based on Euler's Theorem in Number Theory. 
+  It constructs a cryptosystem with the help of prime test and multiplicative inverse calcutating algorithms.
+  The algorithm is based on a one-way trapdoor function, 
+  which means that the encryption process can be done in polynomial time, 
+  but the existing deciphering attack requires exponential time.
+  Therefore, RSA Algorithm is secure in the existing engineering implementation.
 \end{abstractEn}
